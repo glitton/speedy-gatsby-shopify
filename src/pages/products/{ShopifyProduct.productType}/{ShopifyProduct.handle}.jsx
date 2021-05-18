@@ -29,6 +29,10 @@ import {
   productDescription,
 } from "./product-page.module.css"
 
+async function FetchLocation(){
+  const location = await fetch(`https://geolocation-db.com/json/${process.env.GEOLOCATION_API}`)
+  return await location.json()
+}
 export default function Product({ data: { product, suggestions } }) {
   const {
     options,
@@ -40,6 +44,14 @@ export default function Product({ data: { product, suggestions } }) {
     images,
     images: [firstImage],
   } = product
+
+const [location, setLocation] = React.useState(null)
+
+  React.useEffect(()=> {
+    FetchLocation().then(setLocation)
+  },[])
+  console.log(location)
+
   const { client } = React.useContext(StoreContext)
 
   const [variant, setVariant] = React.useState({ ...initialVariant })

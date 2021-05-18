@@ -13,6 +13,7 @@ module.exports = {
   },
   flags: {
     FAST_DEV: true,
+    FUNCTIONS: true,
   },
   plugins: [
     {
