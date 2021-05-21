@@ -27,12 +27,28 @@ import {
   addToCartStyle,
   metaSection,
   productDescription,
+  shipping,
 } from "./product-page.module.css"
 
-async function FetchLocation(){
-  const location = await fetch(`https://geolocation-db.com/json/${process.env.GEOLOCATION_API}`)
-  return await location.json()
+async function fetchCost(url) {
+  const location = await fetch(
+    `https://geolocation-db.com/json/${process.env.GATSBY_GEOLOCATION_API}`
+  )
+
+  const locationJson = await location.json()
+
+  const costs = await fetch(
+    `/api/get-costs?country_code=${locationJson.country_code}`
+  )
+
+  const costJson = await costs.json()
+
+  return {
+    price: costJson,
+    country: locationJson.country_name,
+  }
 }
+
 export default function Product({ data: { product, suggestions } }) {
   const {
     options,
@@ -45,12 +61,13 @@ export default function Product({ data: { product, suggestions } }) {
     images: [firstImage],
   } = product
 
-const [location, setLocation] = React.useState(null)
+  const [cost, setCost] = React.useState(null)
 
-  React.useEffect(()=> {
-    FetchLocation().then(setLocation)
-  },[])
-  console.log(location)
+  React.useEffect(() => {
+    fetchCost().then(setCost)
+  }, [])
+
+  console.log(cost)
 
   const { client } = React.useContext(StoreContext)
 
@@ -219,6 +236,12 @@ const [location, setLocation] = React.useState(null)
                 ))}
               </span>
             </div>
+            {cost && (
+              <div className={shipping}>
+                Estimated shipping cost to {cost.country} is
+                <b>${cost.price}</b>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -227,7 +250,7 @@ const [location, setLocation] = React.useState(null)
 }
 
 export const query = graphql`
-  query($id: String!, $productType: String!) {
+  query ($id: String!, $productType: String!) {
     product: shopifyProduct(id: { eq: $id }) {
       title
       description
