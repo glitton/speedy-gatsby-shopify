@@ -67,7 +67,7 @@ export default function Product({ data: { product, suggestions } }) {
     fetchCost().then(setCost)
   }, [])
 
-  console.log(cost)
+  // console.log(cost)
 
   const { client } = React.useContext(StoreContext)
 

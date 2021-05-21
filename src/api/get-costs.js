@@ -1,7 +1,7 @@
 const fetch = require("node-fetch").default
 export default async function handler(req, res) {
   const countryCode = req.query.country_code
-  console.log("this is the cc", countryCode)
+  // console.log("this is the cc", countryCode)
 
   const shippingZones = await fetch(
     "https://gatsby-dev-500-products.myshopify.com/admin/api/2021-04/shipping_zones.json",
