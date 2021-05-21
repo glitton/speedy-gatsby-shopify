@@ -18,14 +18,11 @@ export default async function handler(req, res) {
   // console.log(data.shipping_zones)
   let shippingZone = findShippingZone(data, countryCode)
   if (shippingZone) {
-    res.send(shippingZone.price_based_shipping_rates[0].price)
+    res.json(shippingZone.price_based_shipping_rates[0].price)
   } else {
     shippingZone = findShippingZone(data, `*`)
-    res.send(shippingZone.carrier_shipping_rate_providers[0].flat_modifier)
+    res.json(shippingZone.carrier_shipping_rate_providers[0].flat_modifier)
   }
-
-  res.send(shippingZone)
-  console.log(shippingZone)
 }
 
 function findShippingZone(data, countryCode) {
